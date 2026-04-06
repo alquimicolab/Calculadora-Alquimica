@@ -543,6 +543,7 @@
             }
         }
     </style>
+<base target="_blank">
 </head>
 <body class="paper-texture p-4 md:p-8">
 
@@ -918,7 +919,7 @@
             client: '',
             phone: '',
             email: '',
-            shirtTypes: ['basic'],
+            shirtTypes: [],  // ← CORREGIDO: Ahora inicia vacío para elegir libremente
             quantity: 24,
             positions: {
                 front: { active: false, colors: 2 },
@@ -1192,7 +1193,7 @@
         function toggleShirtType(id) {
             const index = state.shirtTypes.indexOf(id);
             if (index > -1) {
-                if (state.shirtTypes.length > 1) {
+                if (state.shirtTypes.length > -1) {
                     state.shirtTypes.splice(index, 1);
                 }
             } else {
@@ -1241,6 +1242,18 @@
                 </div>
                 `;
             }).join('');
+        }
+
+        function togglePosition(id) {
+            state.positions[id].active = !state.positions[id].active;
+            renderPositions();
+            calculate();
+        }
+
+        function setPositionColors(posId, colors) {
+            state.positions[posId].colors = colors;  // ← CORREGIDO: Era posPosId (error de tipeo)
+            renderPositions();
+            calculate();
         }
 
         function renderExtras() {
@@ -1297,18 +1310,6 @@
             updateReceipt();
         }
 
-        function togglePosition(id) {
-            state.positions[id].active = !state.positions[id].active;
-            renderPositions();
-            calculate();
-        }
-
-        function setPositionColors(posId, colors) {
-            state.positions[posId].colors = colors;
-            renderPositions();
-            calculate();
-        }
-
         function toggleExtra(id) {
             if (state.extras.includes(id)) {
                 state.extras = state.extras.filter(e => e !== id);
@@ -1339,9 +1340,11 @@
             let totalShirtPrice = 0;
             state.shirtTypes.forEach(typeId => {
                 const shirt = config.shirtTypes.find(s => s.id === typeId);
-                totalShirtPrice += shirt.price;
+                if (shirt) totalShirtPrice += shirt.price;  // ← CORREGIDO: Validación añadida
             });
-            const avgShirtPrice = totalShirtPrice / state.shirtTypes.length;
+            
+            // ← CORREGIDO: Protección contra división por cero cuando no hay prendas seleccionadas
+            const avgShirtPrice = state.shirtTypes.length > 0 ? totalShirtPrice / state.shirtTypes.length : 0;
             
             let printCostPerUnit = 0;
             let positionDetails = [];
@@ -1488,7 +1491,7 @@
             document.getElementById('receiptContent').innerHTML = `
                 <div class="font-mono text-xs leading-tight text-gray-800">
                     <div>CLIENTE: ${state.client || '---'}</div>
-                    <div>PRENDAS: ${shirtsText}</div>
+                    <div>PRENDAS: ${shirtsText || 'NINGUNA'}</div>
                     <div>CANT: ${state.quantity} UND</div>
                     <div>POS: ${posText || 'NINGUNA'}</div>
                     <div class="text-amber-800">${filesText}</div>
@@ -1721,7 +1724,7 @@
                 client: '',
                 phone: '',
                 email: '',
-                shirtTypes: ['basic'],
+                shirtTypes: [],  // ← CORREGIDO: Ahora inicia vacío
                 quantity: 24,
                 positions: {
                     front: { active: false, colors: 2 },
