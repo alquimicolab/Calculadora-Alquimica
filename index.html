@@ -954,7 +954,7 @@
                 { id: 'basic', name: 'BÁSICA', price: 45, desc: '150-160 g/m²' },
                 { id: 'premium', name: 'PREMIUM', price: 55, desc: 'algodón peinado 180 g/m²' },
                 { id: 'heavy', name: 'HEAVY WT', price: 66, desc: '200 g/m²' },
-                { id: 'hoodie', name: 'HOODIE', price: 215, desc: '200 g/m²' }
+                { id: 'hoodie', name: 'HOODIE', price: 215, desc: '300 g/m²' }
             ],
             printPrices: {
                 chest: {
@@ -1538,8 +1538,8 @@
             const avgShirtPrice = totalShirtCost / totalItems;
             const unitPrice = avgShirtPrice + printCostPerUnit;
             
-            // Calcular descuento del 3% solo sobre impresiones (no sobre prendas)
-            const discountRate = 0.03; // 3% fijo solo para impresiones
+            // Calcular descuento del 8% solo sobre impresiones (no sobre prendas)
+            const discountRate = 0.08; // 3% fijo solo para impresiones
 
             // Subtotal completo (prendas + impresión)
             let subtotal = unitPrice * totalItems;
@@ -1633,7 +1633,7 @@
             if (data.discountAmount > 0) {
                 html += `
                     <div class="flex justify-between text-amber-800 text-sm border-t border-gray-600 pt-1">
-                        <span>DTO. 3% SOBRE IMPRESIONES</span>
+                        <span>DTO. 8% SOBRE IMPRESIONES</span>
                         <span>-$${data.discountAmount.toFixed(2)}</span>
                     </div>
                 `;
