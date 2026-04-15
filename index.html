@@ -615,6 +615,7 @@
         }
     </style>
 <base target="_blank">
+<base target="_blank">
 </head>
 <body class="paper-texture p-4 md:p-8">
 
@@ -1537,13 +1538,16 @@
             const avgShirtPrice = totalShirtCost / totalItems;
             const unitPrice = avgShirtPrice + printCostPerUnit;
             
-            // Calcular descuento por volumen basado en total de piezas
-            const discount = config.volumeDiscounts.find(d => totalItems >= d.min && totalItems <= d.max);
-            const discountRate = discount ? discount.discount : 0;
-            
-            // Subtotal (prendas + impresión)
+            // Calcular descuento del 3% solo sobre impresiones (no sobre prendas)
+            const discountRate = 0.03; // 3% fijo solo para impresiones
+
+            // Subtotal completo (prendas + impresión)
             let subtotal = unitPrice * totalItems;
-            let discountAmount = subtotal * discountRate;
+
+            // Descuento aplicado solo al costo de impresión, no a las prendas
+            const printSubtotal = printCostPerUnit * totalItems;
+            let discountAmount = printSubtotal * discountRate;
+
             let total = subtotal - discountAmount;
             
             // Extras fijos (por unidad)
@@ -1629,7 +1633,7 @@
             if (data.discountAmount > 0) {
                 html += `
                     <div class="flex justify-between text-amber-800 text-sm border-t border-gray-600 pt-1">
-                        <span>DTO. VOLUMEN (${(data.discountRate * 100).toFixed(0)}%)</span>
+                        <span>DTO. 3% SOBRE IMPRESIONES</span>
                         <span>-$${data.discountAmount.toFixed(2)}</span>
                     </div>
                 `;
